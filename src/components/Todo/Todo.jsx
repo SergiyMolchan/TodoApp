@@ -6,26 +6,39 @@ class Todo extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
-      text: ''
+      tasks: [
+        {
+          description: 'create todo array',
+          completed: true
+        }
+      ],
+      description: ''
     }
   }
 
   handleInputTask(e) {
     this.setState(
       {
-        text: e.target.value
+        description: e.target.value
       }
     );
   }
 
   addTask(){
-    if(!this.state.text){
+    if(!this.state.description){
       return
     }
-    this.state.tasks.push(this.state.text);
+
+    let newTask = {
+      description: '',
+      completed: false
+    }
+    
+    newTask.description = this.state.description;
+
+    this.state.tasks.push(newTask);
     console.log(this.state.tasks);
-    this.setState({text: ''});
+    this.setState({description: ''});
   }
 
   render(){
@@ -33,7 +46,7 @@ class Todo extends React.Component{
       <div className="Todo">
         <div>
           <TodoItems tasks={this.state.tasks} />
-          <input type="text" id="=addTaskText" value={this.state.text} onChange={this.handleInputTask.bind(this)}/>
+          <input type="text" id="=addTaskText" value={this.state.description} onChange={this.handleInputTask.bind(this)}/>
           <button id="addTask" onClick={this.addTask.bind(this)}>Add</button>
         </div>
       </div>
@@ -43,13 +56,36 @@ class Todo extends React.Component{
 
 class TodoItems extends React.Component{
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isChecked: false
+      };
+
+  }
+
+  //  need reduks to solve the problem
+
+  toggleChange(task){
+    this.setState({
+      //task.completed: !this.state.task.completed
+    });
+  }
+
   render(){
     return(
       <div className="Todo_items">
       {
         this.props.tasks.map((task, i) =>{
           return(
-            <div key={i}>{task}</div>
+            <div key={i}>
+              <input
+                type="checkbox" 
+                checked={task.completed}  
+                //onChange={this.setState({})}
+              />
+              <div>{task.description}</div>
+            </div>
             )
           })
         } 
