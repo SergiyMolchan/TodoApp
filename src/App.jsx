@@ -45,16 +45,24 @@ class App extends React.Component{
   }
 
   addTask(description){
-    let lenght = this.state.tasks[this.state.tasks.length - 1].id + 1;
+    let length = 0;
+    if(this.state.tasks.length !== 0)
+    {
+      length = this.state.tasks[this.state.tasks.length - 1].id + 1;
+    }
+    else
+    {
+      length = 1;
+    }
     let newTask = {
       id: NaN,
       description: '',
       completed: false
-    }
+    };
 
-    newTask.id = lenght;
+    newTask.id = length;
     newTask.description = description;
-    let tasks = this.state.tasks.push(newTask);
+    let tasks = this.state.tasks.concat(newTask);
     this.setState({tasks: tasks});
   }
 

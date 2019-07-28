@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Todo.sass';
-//import TodoList from './Todo_list'
 //import { createStore } from 'redux';
 
 //Matireal UI imports
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
-import Icon from '@material-ui/core/Icon';
 import Checkbox from '@material-ui/core/Checkbox';
-import AddBtn from './addBtn';
-import DeleteBtn from './DeleteBtn'
+import {AddBtn} from './Buttons'
+//import {SaveBtn} from './Buttons';
+import {DeleteBtn} from './Buttons'
 
 class Todo extends React.Component{
   constructor(props) {
@@ -29,7 +28,6 @@ class Todo extends React.Component{
       return
     }
     this.props.onAddTask(this.state.description)
-    console.log(this.props);
     this.setState({description: ''});
   }
 
@@ -41,14 +39,16 @@ class Todo extends React.Component{
               this.props.tasks.map((task) => { //тут поломка траба полагодити
                 return(
                   <div key={task.id} className="Todo_Item">
-                    <Checkbox
-                      color="primary"
-                      checked={task.completed}  
-                      onChange={ () => {
-                      this.props.onStatusChange(task.id)
-                      }}
-                    />
-                    <div>{task.description}</div>
+                    <div>
+                      <Checkbox
+                        color="primary"
+                        checked={task.completed}  
+                        onChange={ () => {
+                        this.props.onStatusChange(task.id)
+                        }}
+                      />
+                      <div>{task.description}</div>
+                    </div>
         
                     <DeleteBtn
                       onDelete={() => this.props.onDeleteTask(task.id) }
