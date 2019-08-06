@@ -1,23 +1,37 @@
 .Todo
   display: flex
   justify-content: center
-  margin: 200px 10px 20px 10px
+  margin: 100px 10px 20px 10px
   padding: 20px 15px
   &_Controller
     display: flex
     justify-content: center
     align-items: center
+    margin: 10px 15px
+    &-input
+      flex-grow: 1
   &_Item
     display: flex
-    flex-direction: row
-    justify-content: space-between
-    align-items: center
     padding: 10px 20px
+    margin: 20px
     border-bottom: 1px solid silver 
     font-size: 25px
     div
       display: flex
       flex-direction: row
-      align-items: center
+      align-items: center   
+      
+      width: 100%
+    &-view
+      flex-grow: 1
+      display: flex
+    &-controller
+      display: flex
+      flex-direction: row
+      justify-content: flex-end
     &-delete
-      align-self: flex-end    
+      
+
+.completed
+  color: gray
+  text-decoration: line-through

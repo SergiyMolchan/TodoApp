@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Edit from '@material-ui/icons/Edit';
+import { Icon } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -70,3 +72,14 @@ export function SaveBtn(props) {
     </div>
   );
 }
+
+export function EditBtn(props) {
+  const classes = useStyles();
+
+  return (
+    <div>
+      <IconButton className={classes.button} aria-label="Edit">
+        <Edit />
+      </IconButton>
+    </div>
+  )}

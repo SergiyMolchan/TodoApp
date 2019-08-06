@@ -8,14 +8,16 @@ import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
 import {AddBtn} from './Buttons'
-//import {SaveBtn} from './Buttons';
 import {DeleteBtn} from './Buttons'
+import {SaveBtn} from './Buttons';
+import {EditBtn} from './Buttons'
 
 class Todo extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
       description: '',
+      editing: false
     }
     this.handleInputTask = this.handleInputTask.bind(this);
   }
@@ -31,35 +33,57 @@ class Todo extends React.Component{
     this.setState({description: ''});
   }
 
+  renderDisplay(task){
+    return(
+      <div>
+        <div className="Todo_Item-view">
+          <Checkbox
+            color="primary"
+            checked={task.completed}  
+            onChange={ () => {
+            this.props.onStatusChange(task.id)
+            }}
+          />
+          <div>{task.description}</div>
+        </div>
+        <div className="Todo_Item-controller">
+          <DeleteBtn
+            onDelete={() => this.props.onDeleteTask(task.id) }
+            className="Todo_Item-delete"
+          />
+                
+          <EditBtn 
+            //onClick={this.setState({editing: true})}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  renderForm(task){
+    return(
+      <div>
+        <p>sdafsadf</p>
+      </div>
+    )
+  }
+
   render(){
     return(
       <div className="Todo">
         <Card>
           <div>{
-              this.props.tasks.map((task) => { //тут поломка траба полагодити
-                return(
-                  <div key={task.id} className="Todo_Item">
-                    <div>
-                      <Checkbox
-                        color="primary"
-                        checked={task.completed}  
-                        onChange={ () => {
-                        this.props.onStatusChange(task.id)
-                        }}
-                      />
-                      <div>{task.description}</div>
+              this.props.tasks.map((task) => {
+                  return(
+                    <div key={task.id} className={`Todo_Item ${task.completed ? 'completed' : ''}`}>
+                      {this.state.editing ? this.renderForm(task) : this.renderDisplay(task)}
                     </div>
-        
-                    <DeleteBtn
-                      onDelete={() => this.props.onDeleteTask(task.id) }
-                      className="Todo_Item-delete"
-                    />
-                  </div>
-                )
+                  )
               })
-            }</div>
+          }</div>
           <div className="Todo_Controller">
-            <TextField 
+            <TextField
+              className="Todo_Controller-input" 
               type="text" 
               placeholder="Description of the task"
               value={this.state.description} onChange={this.handleInputTask}
