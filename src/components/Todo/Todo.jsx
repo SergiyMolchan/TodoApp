@@ -20,6 +20,7 @@ class Todo extends React.Component{
       editing: false
     }
     this.handleInputTask = this.handleInputTask.bind(this);
+    this.handleEditBtn = this.handleEditBtn.bind(this);
   }
   handleInputTask(e) {
     this.setState({description: e.target.value});
@@ -33,6 +34,10 @@ class Todo extends React.Component{
     this.setState({description: ''});
   }
 
+  handleEditBtn(){
+    this.setState({editing: true})
+  }
+
   renderDisplay(task){
     return(
       <div>
@@ -44,7 +49,7 @@ class Todo extends React.Component{
             this.props.onStatusChange(task.id)
             }}
           />
-          <div>{task.description}</div>
+          <div className="Todo_Item-description">{task.description}</div>
         </div>
         <div className="Todo_Item-controller">
           <DeleteBtn
@@ -53,14 +58,14 @@ class Todo extends React.Component{
           />
                 
           <EditBtn 
-            //onClick={this.setState({editing: true})}
+            //onClick={}
           />
         </div>
       </div>
     )
   }
 
-  renderForm(task){
+  renderEditForm(task){
     return(
       <div>
         <p>sdafsadf</p>
@@ -76,7 +81,7 @@ class Todo extends React.Component{
               this.props.tasks.map((task) => {
                   return(
                     <div key={task.id} className={`Todo_Item ${task.completed ? 'completed' : ''}`}>
-                      {this.state.editing ? this.renderForm(task) : this.renderDisplay(task)}
+                      {this.state.editing ? this.renderEditForm(task) : this.renderDisplay(task)}
                     </div>
                   )
               })
