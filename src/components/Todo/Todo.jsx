@@ -7,20 +7,19 @@ import './Todo.sass';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
-import {AddBtn} from './Buttons'
-import {DeleteBtn} from './Buttons'
+import {AddBtn} from './Buttons';
+import {DeleteBtn} from './Buttons';
 import {SaveBtn} from './Buttons';
-import {EditBtn} from './Buttons'
+import {EditBtn} from './Buttons';
 
 class Todo extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
       description: '',
-      editing: false
+      editing: true
     }
     this.handleInputTask = this.handleInputTask.bind(this);
-    this.handleEditBtn = this.handleEditBtn.bind(this);
   }
   handleInputTask(e) {
     this.setState({description: e.target.value});
@@ -35,13 +34,18 @@ class Todo extends React.Component{
   }
 
   handleEditBtn(){
+    //console.log(this.satate.editing)
     this.setState({editing: true})
+  }
+
+  handleSaveBtn(){
+    this.setState({editing: false});
   }
 
   renderDisplay(task){
     return(
-      <div>
-        <div className="Todo_Item-view">
+      <div className="Todo_Item-wrapper">
+        <div className={`Todo_Item-view ${task.completed ? 'completed' : ''}`}>
           <Checkbox
             color="primary"
             checked={task.completed}  
@@ -58,7 +62,7 @@ class Todo extends React.Component{
           />
                 
           <EditBtn 
-            //onClick={}
+            onEditTask={this.handleEditBtn.bind(this)}
           />
         </div>
       </div>
@@ -67,8 +71,16 @@ class Todo extends React.Component{
 
   renderEditForm(task){
     return(
-      <div>
-        <p>sdafsadf</p>
+      <div className="Todo_Item-EditForm">
+        <form action="#" className="EditForm">
+          <TextField 
+            defaultValue={task.description}
+            className="EditForm_input"
+          />
+          <SaveBtn 
+           onSaveTask={this.handleSaveBtn.bind(this)}
+          />
+        </form>
       </div>
     )
   }
@@ -80,7 +92,7 @@ class Todo extends React.Component{
           <div>{
               this.props.tasks.map((task) => {
                   return(
-                    <div key={task.id} className={`Todo_Item ${task.completed ? 'completed' : ''}`}>
+                    <div key={task.id} className="Todo_Item">
                       {this.state.editing ? this.renderEditForm(task) : this.renderDisplay(task)}
                     </div>
                   )

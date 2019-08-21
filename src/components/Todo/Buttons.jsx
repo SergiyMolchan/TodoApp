@@ -7,7 +7,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
-import { Icon } from '@material-ui/core';
+
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -65,7 +65,7 @@ export function SaveBtn(props) {
 
   return (
     <div>
-      <Button variant="contained" size="small" className={classes.button}>
+      <Button variant="contained" size="small" className={classes.button} onClick={props.onSaveTask}>
         <SaveIcon className={(classes.leftIcon, classes.iconSmall)} />
         Save
       </Button>
@@ -78,7 +78,7 @@ export function EditBtn(props) {
 
   return (
     <div>
-      <IconButton className={classes.button} aria-label="Edit">
+      <IconButton className={classes.button} aria-label="Edit" onClick={props.onEditTask}>
         <Edit />
       </IconButton>
     </div>
