@@ -65,7 +65,7 @@ export function SaveBtn(props) {
 
   return (
     <div>
-      <Button variant="contained" size="small" className={classes.button} onClick={props.onSaveTask}>
+      <Button variant="contained" size="small" className={classes.button} type="submit" onClick={props.onSaveTask}>
         <SaveIcon className={(classes.leftIcon, classes.iconSmall)} />
         Save
       </Button>

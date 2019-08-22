@@ -26,25 +26,11 @@ class App extends React.Component{
     }
     this.handleStatusChange = this.handleStatusChange.bind(this);
     this.handleDeleteTask = this.handleDeleteTask.bind(this);
-    this.addTask = this.addTask.bind(this);
+    this.handeleAddTask = this.handeleAddTask.bind(this);
+    this.handleEditTask = this.handleEditTask.bind(this);
   }
 
-  handleStatusChange(id){
-    let tasks = this.state.tasks.map( (task) => {
-      if(task.id === id){
-        task.completed = !task.completed;
-      }
-      return task;
-    })
-    this.setState({tasks});
-  }
-
-  handleDeleteTask (id) {
-    let tasks = this.state.tasks.filter( task => task.id !== id );
-    this.setState({tasks});
-  }
-
-  addTask(description){
+  handeleAddTask(description){
     let length = 0;
     if(this.state.tasks.length !== 0)
     {
@@ -66,6 +52,35 @@ class App extends React.Component{
     this.setState({tasks: tasks});
   }
 
+    handleStatusChange(id){
+    let tasks = this.state.tasks.map( (task) => {
+      if(task.id === id){
+        task.completed = !task.completed;
+      }
+      return task;
+    })
+    this.setState({tasks});
+  }
+
+  handleDeleteTask (id) {
+    let tasks = this.state.tasks.filter( task => task.id !== id );
+    this.setState({tasks});
+  }
+
+  handleEditTask(id, description){
+    let tasks = this.state.tasks.map(task => {
+
+      if(id === task.id){
+        task.description = description;
+      }
+
+      return task;
+    });
+
+    this.setState({ tasks });
+
+  }
+
   render(){
     return(
     <div className={styles.wrepper}>
@@ -75,9 +90,10 @@ class App extends React.Component{
       <main>
         <Todo 
           tasks={this.state.tasks}
-          onAddTask={this.addTask}
+          onAddTask={this.handeleAddTask}
           onStatusChange={this.handleStatusChange}
           onDeleteTask={this.handleDeleteTask}
+          onEdit={this.handleEditTask}
         />
       </main>
       <footer>
