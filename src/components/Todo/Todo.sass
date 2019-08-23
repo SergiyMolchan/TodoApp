@@ -1,7 +1,8 @@
 .Todo
   display: flex
+  flex-direction: column
   justify-content: center
-  margin: 100px 10px 20px 10px
+  margin: 10px 10px 20px 10px
   padding: 20px 15px
   &_Controller
     display: flex
@@ -11,6 +12,9 @@
     font-size: 22px
     &-input
       flex-grow: 1
+  &_List
+    max-height: 550px
+    overflow-y: scroll
   &_Item
     display: flex
     flex-direction: row
@@ -18,6 +22,8 @@
     margin: 20px
     border-bottom: 1px solid silver 
     font-size: 20px
+    min-width: 470px
+    min-height: 75px
     &-wrapper
       flex-grow: 1
       display: flex
@@ -33,14 +39,16 @@
       align-items: center
       max-width: 120px
     &-delete
+    &-EditForm
+      flex-grow: 1
 
 .EditForm
-  flex-grow: 1
   display: flex
   justify-content: space-between
   align-items: center
   &_input
     font-size: 20px
+    flex-grow: 1
       
 
 .completed

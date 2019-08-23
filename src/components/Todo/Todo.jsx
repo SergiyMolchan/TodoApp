@@ -34,7 +34,7 @@ class Todo extends React.Component{
     return(
       <div className="Todo">
         <Card>
-          <div>{
+          <div className="Todo_List">{
               this.props.tasks.map((task) => {
                   return(
                     <TodoItem

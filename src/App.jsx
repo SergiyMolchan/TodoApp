@@ -2,9 +2,8 @@ import React from 'react';
 //import logo from './logo.svg';
 import './App.sass';
 
-import styles from './App.sass';
-
-import Todo from './components/Todo/Todo'
+import TodoHeader from './components/TodoHeader/TodoHeader';
+import Todo from './components/Todo/Todo';
 
 class App extends React.Component{
 
@@ -83,9 +82,9 @@ class App extends React.Component{
 
   render(){
     return(
-    <div className={styles.wrepper}>
+    <div className="wrepper">
       <header>
-        <p>header</p>
+        <TodoHeader />
       </header>
       <main>
         <Todo 
