@@ -61,6 +61,11 @@ export default function MyAccount(props) {
                 <p>{`Actively: ${props.stats.actively}`}</p>
               </div>
             </div>
+            <div className="MyAccount_accountOption">
+              {
+                //create new component do not func
+              }
+            </div>
           </div>
         </Fade>
       </Modal>
