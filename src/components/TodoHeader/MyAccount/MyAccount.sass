@@ -1,0 +1,29 @@
+.MyAccount
+  &_header
+    border-bottom: 1px solid gray
+    width: 100%
+    min-width: 250px
+  &_stats
+    width: 100%
+    h3
+      font-size: 22px
+      margin: 10px 0px
+    &-wrapper
+      display: flex
+      align-items: center
+      justify-content: space-around
+      p
+        padding: 0px 10px
+        font-size: 18px
+      
+@media screen and (max-width: 400px)
+  .MyAccount
+    &_stats
+      &-wrapper
+        flex-direction: column
+        align-items: flex-start
+        p
+          margin: 5px 0px
+          padding: 0px 7px
+          font-size: 16px
+      

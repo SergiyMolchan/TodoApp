@@ -20,6 +20,16 @@ class App extends React.Component{
           id: 1,
           description: 'join softserve IT Academy',
           completed: false
+        },
+        {
+          id: 2,
+          description: 'Created portfolio',
+          completed: false
+        },
+        {
+          id: 3,
+          description: 'to sleep',
+          completed: true
         }
       ],
     }
@@ -77,14 +87,15 @@ class App extends React.Component{
     });
 
     this.setState({ tasks });
-
   }
 
   render(){
     return(
     <div className="wrepper">
       <header>
-        <TodoHeader />
+        <TodoHeader
+          tasks={this.state.tasks}
+        />
       </header>
       <main>
         <Todo 

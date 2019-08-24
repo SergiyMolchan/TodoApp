@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import MyAccount from './MyAccount/MyAccount'
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -21,9 +22,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function MenuAppBar() {
+export default function MenuAppBar(props) {
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
+  const [auth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -40,7 +41,7 @@ export default function MenuAppBar() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Stats
+            Todo
           </Typography>
           {auth && (
             <div>
@@ -68,7 +69,12 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <MyAccount 
+                    onCalculate={props.onCalculate}
+                    stats={props.stats}
+                  />
+                </MenuItem>
                 <MenuItem onClick={handleClose}>Logout</MenuItem>
               </Menu>
             </div>
@@ -78,3 +84,8 @@ export default function MenuAppBar() {
     </div>
   );
 }
+
+AppBar.protTypes = {
+  onCalculate: PropTypes.func.isRequired,
+  stats: PropTypes.object.isRequired
+ }
