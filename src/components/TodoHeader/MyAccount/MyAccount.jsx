@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Options from './Options'
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import './MyAccount.sass'
+import AppBar from '@material-ui/core/AppBar';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -61,11 +63,7 @@ export default function MyAccount(props) {
                 <p>{`Actively: ${props.stats.actively}`}</p>
               </div>
             </div>
-            <div className="MyAccount_accountOption">
-              {
-                //create new component do not func
-              }
-            </div>
+            <Options />
           </div>
         </Fade>
       </Modal>
