@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TodoItem from "./TodoItem";
+import { Stats } from "./Stats";
 import './Todo.sass';
 //import { createStore } from 'redux';
 
@@ -34,6 +35,9 @@ class Todo extends React.Component{
     return(
       <div className="Todo">
         <Card>
+          <div className="Todo_header">
+            <Stats tasks={this.props.tasks} />
+          </div>
           <div className="Todo_List">{
               this.props.tasks.map((task) => {
                   return(
