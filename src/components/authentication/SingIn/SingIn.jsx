@@ -1,23 +1,76 @@
 import React from 'react';
-import './SingIn.sass'
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
 
-class SingIn extends React.Component{
+const useStyles = makeStyles(theme => ({
+  wrapper: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'column',
+    padding: '20px 10px'
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  dense: {
+    marginTop: theme.spacing(2),
+  },
+  menu: {
+    width: 250,
+  },
+}));
 
-  constructor(props) {
-    super(props);
-    this.state = {
-    
-    }
-   
-  }
+export default function OutlinedTextFields() {
+  const classes = useStyles();
+  const [values, setValues] = React.useState({
+    //name: 'Cat in the Hat',
+  });
 
-  render(){
-    return(
-    <div className="SingIn">
-    
+  // const handleChange = name => event => {
+  //   setValues({ ...values, [name]: event.target.value });
+  // };
+
+  return (
+    <div className={classes.wrapper}>
+      <Card>
+        <form className={classes.container} noValidate autoComplete="on">
+
+          <TextField
+            id="outlined-login-SindIn"
+            label="Login"
+            className={classes.textField}
+            type="text"
+            margin="normal"
+            autoComplete="current-login-SindIn"
+            variant="outlined"
+          />
+
+          <TextField
+            id="outlined-password-SindIn"
+            label="Password"
+            className={classes.textField}
+            type="password"
+            autoComplete="current-password-SindIn"
+            margin="normal"
+            variant="outlined"
+          />
+
+          <Button variant="contained" color="primary" className={classes.button}>
+            Login
+          </Button>
+
+        </form>
+      </Card>
     </div>
-    );
-  }
+  );
 }
-
-export default SingIn;
