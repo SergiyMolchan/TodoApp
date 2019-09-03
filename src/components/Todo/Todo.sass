@@ -9,13 +9,16 @@
   &_Controller
     display: flex
     justify-content: center
-    align-items: center
+    align-items: flex-end
+    flex-wrap: wrap
     margin: 10px 15px
     font-size: 22px
+    padding-bottom: 10px
     &-input
       flex-grow: 1
+      min-width: 200px
   &_List
-    max-height: 550px
+    max-height: 70vh
     overflow-y: scroll
     overflow-x: hidden
   &_Item
@@ -27,11 +30,20 @@
     font-size: 20px
     min-height: 75px
     &-wrapper
-      flex-grow: 1
+      //flex-grow: 1
+      width: 100%
       display: flex
       justify-content: space-between
       align-items: center
+    &-deadline
+      width: 140px
+      margin-left: 10px
+      overflow: hidden
+    &-description
+      overflow: hidden
     &-view
+      min-width: 200px
+      max-width: calc(100% - 200px)
       display: flex
       align-items: center
     &-controller
@@ -47,14 +59,17 @@
 //Hover for btns, visible
 .Todo_Item
   &:hover
-    overflow-x: scroll
-    .Todo_Item-controller
-      display: flex
-
+    .Todo_Item
+      &-description
+        overflow-x: scroll
+      &-controller
+        display: flex
+      &-deadline
+       display: none
 .EditForm
   display: flex
   justify-content: space-between
-  align-items: center
+  align-items: flex-end
   &_input
     font-size: 20px
     flex-grow: 1
@@ -83,6 +98,10 @@
 
 @media screen and (max-width: 450px)
   .Todo
-
     &_Item
       font-size: 16px
+      overflow-x: scroll
+    &_Controller
+      align-items: center
+      div
+        margin: 7px 5px

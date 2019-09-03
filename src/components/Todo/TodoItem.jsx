@@ -1,23 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Todo.sass';
-
 //Matireal UI imports
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
+//import DateInput from './DateInput';
 import {DeleteBtn} from './Buttons';
 import {SaveBtn} from './Buttons';
 import {EditBtn} from './Buttons';
+
+
 
 class TodoItem extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
       description: this.props.task.description,
+      deadline: this.props.task.deadline,
       editing: false
     }
     this.handleSaveBtn = this.handleSaveBtn.bind(this);
     this.handelEditInput = this.handelEditInput.bind(this);
+    this.handleChangeDate = this.handleChangeDate.bind(this);
   }
 
   handleEditBtn(){
@@ -31,14 +35,22 @@ class TodoItem extends React.Component{
   handleSaveBtn(e){
     e.preventDefault();
     let description = this.state.description;
+    let deadline = this.state.deadline;
 
-    this.props.onEdit(this.props.task.id, description);
+    this.props.onEdit(this.props.task.id, description, deadline);
 
     if(!this.state.description){
       return
     }
+    if(!this.state.deadline){
+      return
+    }
 
     this.setState({editing: false});
+  }
+
+  handleChangeDate(e){
+    this.setState({deadline: e.target.value});
   }
 
   renderDisplay(task){
@@ -64,6 +76,18 @@ class TodoItem extends React.Component{
             onEditTask={this.handleEditBtn.bind(this)}
           />
         </div>
+        <div className="Todo_Item-deadline">
+          <TextField
+            id="datetime-local"
+            label="Deadline"
+            value={this.props.task.deadline}
+            type="datetime-local"
+            disabled={true}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </div>
       </div>
     )
   }
@@ -78,6 +102,17 @@ class TodoItem extends React.Component{
             onChange={this.handelEditInput}
             className="EditForm_input"
             name="description"
+          />
+          <TextField
+            onChange={this.handleChangeDate}
+            id="datetime-local"
+            label="Deadline"
+            //defaultValue={this.state.deadline}
+            value={this.state.deadline}
+            type="datetime-local"
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
           <SaveBtn
             onSaveTask={this.handleSaveBtn}

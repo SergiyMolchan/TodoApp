@@ -14,22 +14,26 @@ class App extends React.Component{
         {
           id: 0,
           description: 'create todo array',
-          completed: true
+          completed: true,
+          deadline: "2019-09-15T10:30"
         },
         {
           id: 1,
           description: 'join softserve IT Academy',
-          completed: false
+          completed: false,
+          deadline: "2019-10-24T11:30"
         },
         {
           id: 2,
           description: 'Created portfolio',
-          completed: false
+          completed: false,
+          deadline: "2017-05-24T12:30"
         },
         {
           id: 3,
           description: 'to sleep',
-          completed: true
+          completed: true,
+          deadline: "2020-05-24T13:30"
         }
       ],
     }
@@ -39,7 +43,7 @@ class App extends React.Component{
     this.handleEditTask = this.handleEditTask.bind(this);
   }
 
-  handeleAddTask(description){
+  handeleAddTask(description, deadline){
     let length = 0;
     if(this.state.tasks.length !== 0)
     {
@@ -52,11 +56,13 @@ class App extends React.Component{
     let newTask = {
       id: NaN,
       description: '',
-      completed: false
+      completed: false,
+      deadline: 54
     };
 
     newTask.id = length;
     newTask.description = description;
+    newTask.deadline = deadline;
     let tasks = this.state.tasks.concat(newTask);
     this.setState({tasks: tasks});
   }
@@ -76,11 +82,12 @@ class App extends React.Component{
     this.setState({tasks});
   }
 
-  handleEditTask(id, description){
+  handleEditTask(id, description, deadline){
     let tasks = this.state.tasks.map(task => {
 
       if(id === task.id){
         task.description = description;
+        task.deadline = deadline;
       }
 
       return task;

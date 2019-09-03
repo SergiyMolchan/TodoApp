@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TodoItem from "./TodoItem";
+import DateInput from './DateInput';
 import { Stats } from "./Stats";
 import './Todo.sass';
 //import { createStore } from 'redux';
@@ -16,19 +17,29 @@ class Todo extends React.Component{
     super(props);
     this.state = {
       description: '',
+      deadline: ''
     }
     this.handleInputTask = this.handleInputTask.bind(this);
+    this.handleChangeDate = this.handleChangeDate.bind(this)
   }
   handleInputTask(e) {
     this.setState({description: e.target.value});
+  }
+
+  handleChangeDate(e){
+    console.log(this.state.deadline);
+    this.setState({deadline: e.target.value})
   }
 
   handleAddBtn(){
     if(!this.state.description){
       return
     }
-    this.props.onAddTask(this.state.description)
-    this.setState({description: ''});
+    if(!this.state.deadline){
+      return
+    }
+    this.props.onAddTask(this.state.description, this.state.deadline)
+    this.setState({description: '', deadline: ''});
   }
 
   render(){
@@ -59,6 +70,7 @@ class Todo extends React.Component{
               value={this.state.description} 
               onChange={this.handleInputTask}
             />
+            <DateInput onDate={this.handleChangeDate}/>
             <AddBtn onAddTask={this.handleAddBtn.bind(this)}/>
           </div>
         </Card>
