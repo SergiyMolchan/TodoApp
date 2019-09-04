@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link, BrowserRouter, Route, Switch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -44,31 +45,45 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    marginBottom: '25px'
   },
 }));
 
-export default function SimpleTabs() {
+export default function SimpleTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   function handleChange(event, newValue) {
     setValue(newValue);
   }
-
+  
   return (
     <div className={classes.root}>
-      <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
-          <Tab label="Login" {...a11yProps(0)} />
-          <Tab label="Registration" {...a11yProps(1)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-        <SingIn />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Registration />
-      </TabPanel>
+      <BrowserRouter>
+        <AppBar position="static">
+          <Tabs value={window.location.href === `${window.location.origin}/Login` ? 0 : 1} onChange={handleChange} aria-label="simple tabs example" centered>
+              <Tab
+                className={classes.tabLink} 
+                label="Login" 
+                {...a11yProps(0)} 
+                component={Link}  
+                to="/Login" 
+              />
+              <Tab  
+                className={classes.tabLink} 
+                label="Registration" 
+                {...a11yProps(1)} 
+                component={Link}  
+                to="/Registration"
+              /> 
+          </Tabs>
+        </AppBar>
+        <TabPanel value={value} index={0} component={Switch}>
+          <Route path="/Login" component={SingIn} />
+          <Route path="/Registration" component={Registration} />
+        </TabPanel>
+      </BrowserRouter>
+      
     </div>
   );
 }
