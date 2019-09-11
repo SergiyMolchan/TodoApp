@@ -10,6 +10,8 @@ import './Todo.sass';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
 import {AddBtn} from './Buttons';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 
 class Todo extends React.Component{
@@ -17,17 +19,20 @@ class Todo extends React.Component{
     super(props);
     this.state = {
       description: '',
-      deadline: ''
+      deadline: '',
+      tasks: this.props.tasks,
+      hideCompleted: false
     }
+    this.handleAddBtn = this.handleAddBtn.bind(this);
     this.handleInputTask = this.handleInputTask.bind(this);
-    this.handleChangeDate = this.handleChangeDate.bind(this)
+    this.handleChangeDate = this.handleChangeDate.bind(this);
+    this.handleSwitch = this.handleSwitch.bind(this);
   }
   handleInputTask(e) {
     this.setState({description: e.target.value});
   }
 
   handleChangeDate(e){
-    console.log(this.state.deadline);
     this.setState({deadline: e.target.value})
   }
 
@@ -38,8 +43,28 @@ class Todo extends React.Component{
     if(!this.state.deadline){
       return
     }
-    this.props.onAddTask(this.state.description, this.state.deadline)
-    this.setState({description: '', deadline: ''});
+    this.props.onAddTask(this.state.description, this.state.deadline);
+    this.setState({description: ''}, () => this.filterList());
+  }
+
+  handleSwitch(){
+    this.setState({ hideCompleted: !this.state.hideCompleted }, () => this.filterList());
+  }
+
+  filterList(){
+    let tasks = this.props.tasks;
+    if(this.state.hideCompleted){
+      tasks = tasks.filter( task => task.completed === false );
+    } else {
+      tasks = this.props.tasks;
+    }
+    this.setState({tasks});
+  }
+
+  componentWillReceiveProps(tasks){
+    if(tasks !== this.props.tasks) {
+      this.filterList(); //update component if completed task at {hideCompleted: true}
+    }
   }
 
   render(){
@@ -48,9 +73,15 @@ class Todo extends React.Component{
         <Card>
           <div className="Todo_header">
             <Stats tasks={this.props.tasks} />
+            <FormControlLabel
+              control={
+                <Switch color="primary" onChange={this.handleSwitch}/>
+              }
+              label="hide completed"
+            />
           </div>
           <div className="Todo_List">{
-              this.props.tasks.map((task) => {
+              this.state.tasks.map((task) => {
                   return(
                     <TodoItem
                       key={task.id} 
@@ -71,7 +102,7 @@ class Todo extends React.Component{
               onChange={this.handleInputTask}
             />
             <DateInput onDate={this.handleChangeDate}/>
-            <AddBtn onAddTask={this.handleAddBtn.bind(this)}/>
+            <AddBtn onAddTask={this.handleAddBtn}/>
           </div>
         </Card>
       </div>
