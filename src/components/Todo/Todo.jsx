@@ -12,7 +12,7 @@ import Card from '@material-ui/core/Card';
 import {AddBtn} from './Buttons';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+import RadioBtn from './RadioBtn'
 
 class Todo extends React.Component{
   constructor(props) {
@@ -27,6 +27,7 @@ class Todo extends React.Component{
     this.handleInputTask = this.handleInputTask.bind(this);
     this.handleChangeDate = this.handleChangeDate.bind(this);
     this.handleSwitch = this.handleSwitch.bind(this);
+    this.SortTasks = this.SortTasks.bind(this);
   }
   handleInputTask(e) {
     this.setState({description: e.target.value});
@@ -61,6 +62,42 @@ class Todo extends React.Component{
     this.setState({tasks});
   }
 
+  SortTasks(value){
+    let tasks = this.state.tasks;
+
+    // Depending on the value of the RadioBtn returned by the component, 
+    // we sort one of the cases
+    switch(value){
+      case 'Alphabetically':
+        tasks.sort(dynamicSort("description"));
+      break;
+
+      case "ByDeadline":
+        tasks.sort(dynamicSort("deadline"));
+      break;
+
+      default:
+        return  tasks.sort(dynamicSort("deadline"));
+    }
+
+    function dynamicSort(property) {
+      var sortOrder = 1;
+      if(property[0] === "-") {
+          sortOrder = -1;
+          property = property.substr(1);
+      }
+      return function (a,b) {
+          /* next line works with strings and numbers, 
+           * and you may want to customize it to your needs
+           */
+          var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+          return result * sortOrder;
+      }
+    }
+
+    this.setState({tasks});
+  }
+
   componentWillReceiveProps(tasks){
     if(tasks !== this.props.tasks) {
       this.filterList(); //update component if completed task at {hideCompleted: true}
@@ -73,6 +110,7 @@ class Todo extends React.Component{
         <Card>
           <div className="Todo_header">
             <Stats tasks={this.props.tasks} />
+            <RadioBtn onSort={this.SortTasks}/>
             <FormControlLabel
               control={
                 <Switch color="primary" onChange={this.handleSwitch}/>

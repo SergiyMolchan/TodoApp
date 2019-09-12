@@ -5,9 +5,7 @@ import './Todo.sass';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 //import DateInput from './DateInput';
-import {DeleteBtn} from './Buttons';
-import {SaveBtn} from './Buttons';
-import {EditBtn} from './Buttons';
+import {DeleteBtn, SaveBtn, EditBtn} from './Buttons';
 
 
 

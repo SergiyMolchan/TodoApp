@@ -3,7 +3,7 @@ import React from 'react';
 import './App.sass';
 import TodoHeader from './components/TodoHeader/TodoHeader';
 import Todo from './components/Todo/Todo';
-import { BrowserRouter } from 'react-router-dom';
+//import { BrowserRouter } from 'react-router-dom';
 
 class App extends React.Component{
 
@@ -34,8 +34,15 @@ class App extends React.Component{
           description: 'to sleep',
           completed: true,
           deadline: "2020-05-24T13:30"
+        },
+        {
+          id: 4,
+          description: 'Bearth Day',
+          completed: false,
+          deadline: "2019-09-05T23:30"
         }
       ],
+      categoriesList: ['all']
     }
     this.handleStatusChange = this.handleStatusChange.bind(this);
     this.handleDeleteTask = this.handleDeleteTask.bind(this);
