@@ -7,8 +7,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 //import DateInput from './DateInput';
 import {DeleteBtn, SaveBtn, EditBtn} from './Buttons';
 
-
-
 class TodoItem extends React.Component{
   constructor(props) {
     super(props);
@@ -44,7 +42,7 @@ class TodoItem extends React.Component{
       return
     }
 
-    this.setState({editing: false});
+    this.setState({editing: false}, () => this.props.onSort());
   }
 
   handleChangeDate(e){
@@ -66,7 +64,10 @@ class TodoItem extends React.Component{
         </div>
         <div className="Todo_Item-controller">
           <DeleteBtn
-            onDelete={() => this.props.onDeleteTask(task.id) }
+            onDelete={() => {
+              this.props.onDeleteTask(task.id);
+              this.props.onSort();
+            }}
             className="Todo_Item-delete"
           />
                 
@@ -94,8 +95,7 @@ class TodoItem extends React.Component{
     return(
       <div className="Todo_Item-EditForm">
         <form action="#" className="EditForm">
-          <TextField 
-            //defaultValue={task.description}
+          <TextField        
             value={this.state.description}
             onChange={this.handelEditInput}
             className="EditForm_input"
@@ -105,7 +105,6 @@ class TodoItem extends React.Component{
             onChange={this.handleChangeDate}
             id="datetime-local"
             label="Deadline"
-            //defaultValue={this.state.deadline}
             value={this.state.deadline}
             type="datetime-local"
             InputLabelProps={{
@@ -130,8 +129,11 @@ class TodoItem extends React.Component{
 }
 
 TodoItem.protTypes = {
-  task: PropTypes.object,
-  onEdit: PropTypes.func
+  task: PropTypes.object.isRequired,
+  onStatusChange: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired,
 }
 
 export default TodoItem;

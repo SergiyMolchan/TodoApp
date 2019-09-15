@@ -21,13 +21,15 @@ class Todo extends React.Component{
       description: '',
       deadline: '',
       tasks: this.props.tasks,
-      hideCompleted: false
+      hideCompleted: false,
+      sort: ''
     }
     this.handleAddBtn = this.handleAddBtn.bind(this);
     this.handleInputTask = this.handleInputTask.bind(this);
     this.handleChangeDate = this.handleChangeDate.bind(this);
-    this.handleSwitch = this.handleSwitch.bind(this);
-    this.SortTasks = this.SortTasks.bind(this);
+    this.handleChackbox = this.handleChackbox.bind(this);
+    this.handleSortTasks = this.handleSortTasks.bind(this);
+    this.sortTasks = this.sortTasks.bind(this);
   }
   handleInputTask(e) {
     this.setState({description: e.target.value});
@@ -45,10 +47,13 @@ class Todo extends React.Component{
       return
     }
     this.props.onAddTask(this.state.description, this.state.deadline);
-    this.setState({description: ''}, () => this.filterList());
+    this.setState({description: ''}, () => {
+      this.filterList();
+      this.sortTasks();
+    });
   }
 
-  handleSwitch(){
+  handleChackbox(){
     this.setState({ hideCompleted: !this.state.hideCompleted }, () => this.filterList());
   }
 
@@ -62,22 +67,28 @@ class Todo extends React.Component{
     this.setState({tasks});
   }
 
-  SortTasks(value){
-    let tasks = this.state.tasks;
+  handleSortTasks(value){
+    this.setState({sort: value}, () => this.sortTasks());
+  }
+
+  sortTasks(){
+    let tasks = this.props.tasks;
 
     // Depending on the value of the RadioBtn returned by the component, 
     // we sort one of the cases
-    switch(value){
+    switch(this.state.sort){
       case 'Alphabetically':
-        tasks.sort(dynamicSort("description"));
+        tasks = tasks.sort(dynamicSort("description"));
+        this.setState({tasks});
       break;
 
       case "ByDeadline":
-        tasks.sort(dynamicSort("deadline"));
+        tasks = tasks.sort(dynamicSort("deadline"));
+        this.setState({tasks});
       break;
 
       default:
-        return  tasks.sort(dynamicSort("deadline"));
+        return tasks;
     }
 
     function dynamicSort(property) {
@@ -94,8 +105,7 @@ class Todo extends React.Component{
           return result * sortOrder;
       }
     }
-
-    this.setState({tasks});
+    this.setState({tasks}, () => this.filterList());
   }
 
   componentWillReceiveProps(tasks){
@@ -110,10 +120,10 @@ class Todo extends React.Component{
         <Card>
           <div className="Todo_header">
             <Stats tasks={this.props.tasks} />
-            <RadioBtn onSort={this.SortTasks}/>
+            <RadioBtn onSort={this.handleSortTasks}/>
             <FormControlLabel
               control={
-                <Switch color="primary" onChange={this.handleSwitch}/>
+                <Switch color="primary" onChange={this.handleChackbox}/>
               }
               label="hide completed"
             />
@@ -127,6 +137,7 @@ class Todo extends React.Component{
                       onStatusChange={this.props.onStatusChange}
                       onDeleteTask={this.props.onDeleteTask}
                       onEdit={this.props.onEdit}
+                      onSort={this.sortTasks}
                     />
                   )
               })
@@ -149,7 +160,11 @@ class Todo extends React.Component{
 }
 
 Todo.protTypes = {
- tasks: PropTypes.array.isRequired
+  tasks: PropTypes.array.isRequired,
+  onAddTask: PropTypes.func.isRequired,
+  onStatusChange: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDeleteTask: PropTypes.func.isRequired,
 }
 
 export default Todo;

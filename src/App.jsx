@@ -13,13 +13,13 @@ class App extends React.Component{
       tasks: [
         {
           id: 0,
-          description: 'create todo array',
+          description: 'Create todo array',
           completed: true,
           deadline: "2019-09-15T10:30"
         },
         {
           id: 1,
-          description: 'join softserve IT Academy',
+          description: 'Join softserve IT Academy',
           completed: false,
           deadline: "2019-10-24T11:30"
         },
@@ -31,7 +31,7 @@ class App extends React.Component{
         },
         {
           id: 3,
-          description: 'to sleep',
+          description: 'To sleep',
           completed: true,
           deadline: "2020-05-24T13:30"
         },
@@ -42,7 +42,6 @@ class App extends React.Component{
           deadline: "2019-09-05T23:30"
         }
       ],
-      categoriesList: ['all']
     }
     this.handleStatusChange = this.handleStatusChange.bind(this);
     this.handleDeleteTask = this.handleDeleteTask.bind(this);
@@ -52,9 +51,13 @@ class App extends React.Component{
 
   handeleAddTask(description, deadline){
     let length = 0;
+
     if(this.state.tasks.length !== 0)
     {
-      length = this.state.tasks[this.state.tasks.length - 1].id + 1;
+      // помилка виникає при сортуванні і додаванні нового завдання,
+      // тому що останній елемент не завжди має набільший id.
+      length = Math.max.apply(Math, this.state.tasks.map(function(task) { return task.id; }));
+      length++;
     }
     else
     {
@@ -64,12 +67,14 @@ class App extends React.Component{
       id: NaN,
       description: '',
       completed: false,
-      deadline: 54
+      deadline: ''
     };
 
+    description = description[0].toUpperCase() + description.substring(1);
     newTask.id = length;
     newTask.description = description;
     newTask.deadline = deadline;
+
     let tasks = this.state.tasks.concat(newTask);
     this.setState({tasks: tasks});
   }
@@ -90,8 +95,8 @@ class App extends React.Component{
   }
 
   handleEditTask(id, description, deadline){
+    description = description[0].toUpperCase() + description.substring(1);
     let tasks = this.state.tasks.map(task => {
-
       if(id === task.id){
         task.description = description;
         task.deadline = deadline;

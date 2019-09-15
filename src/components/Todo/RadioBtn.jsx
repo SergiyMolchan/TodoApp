@@ -85,5 +85,5 @@ export default function RadioBtn(props) {
 }
 
 RadioBtn.protTypes = {
-  SortTasks: PropTypes.func
+  onSort: PropTypes.func
  }
