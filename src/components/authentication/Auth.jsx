@@ -61,7 +61,7 @@ export default function SimpleTabs(props) {
     <div className={classes.root}>
       <BrowserRouter>
         <AppBar position="static">
-          <Tabs value={window.location.href === `${window.location.origin}/Login` ? 0 : 1} onChange={handleChange} aria-label="simple tabs example" centered>
+          <Tabs value={window.location.href === `${window.location.origin}/Login` ? 0 : window.location.href === `${window.location.origin}/Registration` ? 1 : 0} onChange={handleChange} aria-label="simple tabs example" centered>
               <Tab
                 className={classes.tabLink} 
                 label="Login" 

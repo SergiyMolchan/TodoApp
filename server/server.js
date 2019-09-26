@@ -1,25 +1,41 @@
 const path  = require('path');
 const express  = require('express');
+const session = require('express-session');
+const mongoose = require('mongoose');
+const Todo = require('./models/Todo');
+
 const app = express();
 
-const bodyParser = require("body-parser");
-
-var multer = require('multer'); // v1.0.5
-var upload = multer(); // for parsing multipart/form-data
-
-const port = 9080;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, '..', '/public'))); //path statics
+app.use(express.json());
+app.use(express.urlencoded({extended: false})); 
 
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+async function start(){
+  try {
+    //mongodb pass q1w2e3r4
+    await mongoose.connect('mongodb+srv://Sergiy:q1w2e3r4@cluster0-7idyp.mongodb.net/Users', {
+      useNewUrlParser: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+    });
 
-app.post('/server.js', upload.array(), (req, res) => {
-  console.log(req.body);
+    app.listen(PORT , () => {
+      console.log(`Server is runing on ${PORT}`);
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+start();
+
+
+// send index.html
+app.get('/', (req, res) => {
+  console.log('ok');
   
-  res.json(req.body);
-});
-
-app.listen(port, () => {
-  console.log('Server runing');
+  res.render('index.html');
 });
