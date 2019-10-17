@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose');
 
-const schema = new Schema({
+const Todo = new Schema({
   id: {
     type: Number,
     required: true,
@@ -18,6 +18,10 @@ const schema = new Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  }
 });
 
-module.export = model('Todo', schema);
+module.exports = model('Todo', Todo);
