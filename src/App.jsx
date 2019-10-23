@@ -51,7 +51,7 @@ class App extends React.Component{
 
   handeleAddTask(description, deadline){
     let length = 0;
-
+    
     if(this.state.tasks.length !== 0)
     {
       // помилка виникає при сортуванні і додаванні нового завдання,

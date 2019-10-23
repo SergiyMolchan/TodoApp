@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import TodoItem from "./TodoItem";
 import DateInput from './DateInput';
 import { Stats } from "./Stats";
+import Search from "./Search";
 import './Todo.sass';
 //import { createStore } from 'redux';
 
@@ -30,6 +31,7 @@ class Todo extends React.Component{
     this.handleChackbox = this.handleChackbox.bind(this);
     this.handleSortTasks = this.handleSortTasks.bind(this);
     this.sortTasks = this.sortTasks.bind(this);
+    this.Search = this.Search.bind(this);
   }
   handleInputTask(e) {
     this.setState({description: e.target.value});
@@ -108,6 +110,25 @@ class Todo extends React.Component{
     this.setState({tasks}, () => this.filterList());
   }
 
+  Search(search){
+
+    let tasks = [];
+    
+    if(search !== ''){
+      this.props.tasks.forEach((task) => {
+        if(task.description.search(search) !== -1){
+          tasks.push(task);
+        }
+      });
+    }
+    else
+    {
+      tasks = this.props.tasks;
+    }
+
+    this.setState({tasks});
+  }
+
   componentWillReceiveProps(tasks){
     if(tasks !== this.props.tasks) {
       this.filterList(); //update component if completed task at {hideCompleted: true}
@@ -127,6 +148,7 @@ class Todo extends React.Component{
               }
               label="hide completed"
             />
+            <Search onSearch={this.Search} onFilter={this.filterList} />
           </div>
           <div className="Todo_List">{
               this.state.tasks.map((task) => {
@@ -159,7 +181,7 @@ class Todo extends React.Component{
   }
 }
 
-Todo.protTypes = {
+Todo.propTypes = {
   tasks: PropTypes.array.isRequired,
   onAddTask: PropTypes.func.isRequired,
   onStatusChange: PropTypes.func.isRequired,

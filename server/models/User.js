@@ -11,8 +11,8 @@ const User = new Schema({
   },
   tasks: [
     {
+      ref: 'Todo',
       type: Schema.Types.ObjectId,
-      ref: 'Todo'
     }
   ] 
 });
