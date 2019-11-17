@@ -2,44 +2,48 @@ const path  = require('path');
 const express  = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const Todo = require('./models/Todo');
-const User = require('./models/User.js');
+const User = require('./models/Users.js');
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
-const dbLogin = {
-  login: 'Sergiy',
-  password: 'q1w2e3r4'
-}
-
 app.use((req, res, next) => {
   try {
-    const user = User.findById('5da4889fe981e253d532fba8');
+    const user = User.findById({_id: '5dc434fa328e265418558001'});
     req.user = user;
     next();
   } catch (e) {
     console.error(e);
   }
 });
+
 app.use(express.static(path.join(__dirname, '..', '/public'))); //path statics
 app.use(express.json());
 app.use(express.urlencoded({extended: false})); 
 
+//configuration
+const PORT = process.env.PORT || 3000;
+const dbLogin = {
+  login: 'Sergiy',
+  password: 'q1w2e3r4'
+}
+
+// start server
 function start(){
   try {
-    mongoose.connect(`mongodb+srv://${dbLogin.login}:${dbLogin.password}@cluster0-7idyp.mongodb.net/TodoViewer`, {
+    mongoose.connect(`mongodb+srv://${dbLogin.login}:${dbLogin.password}@cluster0-7idyp.mongodb.net/TodoViewer`, 
+    {
       useNewUrlParser: true,
-      useFindAndModify: false,
       useUnifiedTopology: true,
+      useFindAndModify: false,
+      findOneAndDelete: true,
+      findOneAndUpdate: true
     });
-
+    mongoose.Promise = global.Promise;
     const db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
       console.info('we\'re connected with databases');
     });
-      
-    createdUser();
 
     app.listen(PORT , () => {
       console.info(`Server is runing on ${PORT}`);
@@ -52,47 +56,55 @@ function start(){
 
 start();
 
-function createdUser() {
+//API
+app.post('/registration', (req, res) => register(req, res));
+
+async function register(req, res) {
   try {
+
+    let candidate = await User.findOne({name: req.body.name});
+
+    if(!req.body.name || req.body.name.length < 4){
+      res.status(409).json({message: "Enter your name."});
+    } else if (candidate){
+      res.status(409).json({message: "A user with the same name already exists, use a different name."});
+    } else if (!req.body.password || req.body.password.length < 6){
+      res.status(409).json({message: "Enter your password more 6 symbols."});
+    } else if (req.body.password !== req.body.repeatPassword){
+      res.status(409).json({message: "Passwords must be identical."});
+    } else {   
       const user = new User({
-        name: 'Sergiy',
-        password: '123456',
+        name: req.body.name.trim(),
+        password: req.body.password.trim(),
         tasks: []
       });
-
-      user.addTask(new Todo({
-        id: 0,
-        description: 'Create todo array',
-        completed: true,
-        deadline: "2019-09-15T10:30",
-        userId: '5d9b1e0d1a200947a8a4f6ad' //req.user._id
-      }));
-
-      user.save(e => console.error(e));
-
-     // User.find({name: 'Sergiy'}, () => console.log(user));
+      await user.save();
+      res.status(201).json({user});
+    }
   } catch (e) {
     console.error(e);
+    res.status(409).json({message: "Registration failed."});
   }
 }
 
-app.post('/create', (req, res) => {
-  res.send(createTask(req));
-});
+app.post('/createTask', (req, res) => res.send(createTask(req)));
 
-function createTask(req){
-  const task = new Todo({
-    id: 0,
-    description: 'Create todo array',
+async function createTask(req) {
+  const task = {
+    description: 'qqqq',
     completed: true,
-    deadline: "2019-09-15T10:30",
-    userId: '5d9b1e0d1a200947a8a4f6ad' //req.user._id
-  })
+    deadline: "2020-09-15T10:30",
+  }
 
-  req.user.addTask(task);
-
-  //task.save(e => console.error(e));
-  return task;
+  try {
+    User.findOneAndUpdate({_id: '5dc434fa328e265418558001'}, {$push: {tasks: task}}, (err, user) => {
+      if(err) return console.log(err);
+      return user;
+    });
+  } catch (e) {
+    console.error(e);
+    return e;
+  }
 }
 
 // send index.html
