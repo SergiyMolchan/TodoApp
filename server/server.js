@@ -1,36 +1,24 @@
 const path  = require('path');
 const express  = require('express');
-const session = require('express-session');
+//const session = require('express-session');
 const mongoose = require('mongoose');
 const User = require('./models/Users.js');
-
+const config = require('./config/config.js');
+const authRoutes = require('./routes/auth.js');
 const app = express();
 
-app.use((req, res, next) => {
-  try {
-    const user = User.findById({_id: '5dc434fa328e265418558001'});
-    req.user = user;
-    next();
-  } catch (e) {
-    console.error(e);
-  }
-});
-
+app.use('/api/auth', authRoutes);
 app.use(express.static(path.join(__dirname, '..', '/public'))); //path statics
 app.use(express.json());
 app.use(express.urlencoded({extended: false})); 
 
 //configuration
 const PORT = process.env.PORT || 3000;
-const dbLogin = {
-  login: 'Sergiy',
-  password: 'q1w2e3r4'
-}
 
 // start server
 function start(){
   try {
-    mongoose.connect(`mongodb+srv://${dbLogin.login}:${dbLogin.password}@cluster0-7idyp.mongodb.net/TodoViewer`, 
+    mongoose.connect(config.mongoURI, 
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -42,7 +30,7 @@ function start(){
     const db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
-      console.info('we\'re connected with databases');
+      console.info('MongoDB conected');
     });
 
     app.listen(PORT , () => {
@@ -55,37 +43,6 @@ function start(){
 }
 
 start();
-
-//API
-app.post('/registration', (req, res) => register(req, res));
-
-async function register(req, res) {
-  try {
-
-    let candidate = await User.findOne({name: req.body.name});
-
-    if(!req.body.name || req.body.name.length < 4){
-      res.status(409).json({message: "Enter your name."});
-    } else if (candidate){
-      res.status(409).json({message: "A user with the same name already exists, use a different name."});
-    } else if (!req.body.password || req.body.password.length < 6){
-      res.status(409).json({message: "Enter your password more 6 symbols."});
-    } else if (req.body.password !== req.body.repeatPassword){
-      res.status(409).json({message: "Passwords must be identical."});
-    } else {   
-      const user = new User({
-        name: req.body.name.trim(),
-        password: req.body.password.trim(),
-        tasks: []
-      });
-      await user.save();
-      res.status(201).json({user});
-    }
-  } catch (e) {
-    console.error(e);
-    res.status(409).json({message: "Registration failed."});
-  }
-}
 
 app.post('/createTask', (req, res) => res.send(createTask(req)));
 
