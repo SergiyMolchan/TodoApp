@@ -6,7 +6,6 @@ router.use(express.json());
 router.use(express.urlencoded({extended: false})); 
 
 router.post('/login', controller.login);
-
 router.post('/registration', controller.register);
 
 module.exports = router;

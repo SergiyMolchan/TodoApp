@@ -2,12 +2,18 @@ const path  = require('path');
 const express  = require('express');
 //const session = require('express-session');
 const mongoose = require('mongoose');
+const passport = require('passport');
 const User = require('./models/Users.js');
 const config = require('./config/config.js');
 const authRoutes = require('./routes/auth.js');
+const tasksRouters = require('./routes/tasks.js');
 const app = express();
 
+app.use(passport.initialize());
+require('./middleware/passport.js')(passport);
+
 app.use('/api/auth', authRoutes);
+app.use('/api/tasks', tasksRouters);
 app.use(express.static(path.join(__dirname, '..', '/public'))); //path statics
 app.use(express.json());
 app.use(express.urlencoded({extended: false})); 
