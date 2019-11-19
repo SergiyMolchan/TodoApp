@@ -32,29 +32,53 @@ const useStyles = makeStyles(theme => ({
 
 export default function OutlinedTextFields() {
   const classes = useStyles();
-  const [values, setValues] = React.useState({
-    login: ''
-  });
+  const [name, setName] = React.useState( '' );
+  const [password, setPassword] = React.useState( '' );
+  const [repeatPassword, setRepeatPassword] = React.useState( '' );
 
-  // const handleChange = name => event => {
-  //   setValues({ ...values, [name]: event.target.value });
-  // };
+  async function SubmitForm(){
+    const url = 'http://localhost:4000/api/auth/registration';
+    const data = {name: name, password: password, repeatPassword: repeatPassword};
+    console.log(JSON.stringify(data));
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        cors: 'no-cors',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log(JSON.stringify(data));
+      const json = await response.json();
+      console.log('Успех:', JSON.stringify(json));
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className={classes.wrapper}>
       <Card>
         <form className={classes.container} noValidate autoComplete="off">
 
-          <TextField
-            id="outlined-login"
+        <TextField
+            //error
+            //helperText="Incorrect entry."
+            onChange={ e => setName(e.target.value)}
+            required
+            id="outlined-login-SindIn"
             label="Login"
             className={classes.textField}
-            value={values.name}
+            type="text"
             margin="normal"
+            autoComplete="current-login-SindIn"
             variant="outlined"
-          />
+          />  
 
           <TextField
+            onChange={ e => setPassword(e.target.value)}
+            required
             id="outlined-password-1"
             label="Password"
             className={classes.textField}
@@ -65,8 +89,10 @@ export default function OutlinedTextFields() {
           />
 
           <TextField
+            required
+            onChange={ e => setRepeatPassword(e.target.value)}
             id="outlined-password-2"
-            label="Password"
+            label="Repeat password"
             className={classes.textField}
             type="password"
             autoComplete="current-password-2"
@@ -74,7 +100,7 @@ export default function OutlinedTextFields() {
             variant="outlined"
           />
 
-          <Button variant="contained" color="primary" className={classes.button}>
+          <Button onClick={()=> SubmitForm()} variant="contained" color="primary" className={classes.button}>
             Register
           </Button>
 

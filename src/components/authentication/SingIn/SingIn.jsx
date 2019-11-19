@@ -32,13 +32,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function OutlinedTextFields() {
   const classes = useStyles();
-  const [values, setValues] = React.useState({
-    //name: 'Cat in the Hat',
-  });
+  const [name, setName] = React.useState( '' );
+  const [password, setPassword] = React.useState( '' );
 
-  // const handleChange = name => event => {
-  //   setValues({ ...values, [name]: event.target.value });
-  // };
 
   return (
     <div className={classes.wrapper}>
@@ -46,6 +42,10 @@ export default function OutlinedTextFields() {
         <form className={classes.container} noValidate autoComplete="on">
 
           <TextField
+            //error
+            //helperText="Incorrect entry."
+            onChange={ e => setName(e.target.value)}
+            required
             id="outlined-login-SindIn"
             label="Login"
             className={classes.textField}
@@ -53,9 +53,11 @@ export default function OutlinedTextFields() {
             margin="normal"
             autoComplete="current-login-SindIn"
             variant="outlined"
-          />
+          />  
 
           <TextField
+            required
+            onChange={ e => setPassword(e.target.value)}
             id="outlined-password-SindIn"
             label="Password"
             className={classes.textField}
@@ -64,7 +66,7 @@ export default function OutlinedTextFields() {
             margin="normal"
             variant="outlined"
           />
-
+          
           <Button variant="contained" color="primary" className={classes.button}>
             Login
           </Button>

@@ -26,7 +26,6 @@ module.exports.login = async function(req, res){
 
   module.exports.register = async function(req, res) {
     try {
-  
       let candidate = await User.findOne({name: req.body.name});
   
       if(!req.body.name || req.body.name.length < 4){

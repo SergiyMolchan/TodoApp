@@ -1,63 +1,37 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import MenuAppBar from './AppBar';
-import './TodoHeader.sass';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
 
-class TodoHeader extends React.Component{
+export default function ButtonAppBar() {
+  const classes = useStyles();
 
-  constructor(props) {
-    super(props);
-    this.state = {
-     stats:{
-      all: 0,
-      completed: 0,
-      actively: 0
-     }
-    }
-  
-    this.StatisticsСalculation = this.StatisticsСalculation.bind(this);
-
-  }
-
-  StatisticsСalculation = () => {
-    let stats = {
-      all: 0,
-      completed: 0,
-      actively: 0
-     };
-
-    stats.all = this.props.tasks.length;
-
-    for(let i = 0; i < this.props.tasks.length; i++){
-      if(this.props.tasks[i].completed === true){
-        stats.completed++;
-      }
-    }
-
-    stats.actively = stats.all - stats.completed;
-
-    this.setState({stats});
-
-  }
-
-
-  render(){
-    return(
-      <div>
-        <MenuAppBar
-          onCalculate={this.StatisticsСalculation}
-          stats={this.state.stats}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            Todo
+          </Typography>
+          <Button color="inherit">Login</Button>
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
 }
-
-TodoHeader.protTypes = {
-  onCalculate: PropTypes.func.isRequired,
-  tasks: PropTypes.array.isRequired
- }
- 
-
-export default TodoHeader;
