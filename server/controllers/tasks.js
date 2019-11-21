@@ -1,15 +1,43 @@
-module.exports.get = async function(req, res){
-    console.log("get");
+const User = require('../models/Users.js');
+const errorHandler = require('../utils/errorHandler.js');
+
+module.exports.getTasks = async function(req, res){
+    try {
+        const Tasks = await User.find({name: req.user.id});
+        res.status(200).json(Tasks);
+    } catch (e) {
+        errorHandler(res, e);
+    }
 }
 
 module.exports.create = async function(req, res) {
-    console.log("create");
+    try {
+        const task = {
+            description: req.body.description,
+            completed: false,
+            deadline: req.body.deadline, //"2020-09-15T10:30"
+        }
+        const user = await User.findOneAndUpdate({_id: req.user.id}, {$push: {tasks: task}}, {new: true});
+        res.status(200).json(user.tasks);
+    } catch (e) {
+        errorHandler(res, e);
+    }
 }
 
 module.exports.update = async function(req, res){
-    console.log("update");
+    try {
+        // const user = await User.findOneAndUpdate({_id: req.user.id}, {$set: {tasks: {_id: req.body.id}}}, {new: true});
+        // res.status(200).json(user.tasks);
+    } catch (e) {
+        errorHandler(res, e);
+    }
 }
 
 module.exports.delete = async function(req, res) {
-    console.log("delete");
+    try {
+        const user = await User.findOneAndUpdate({_id: req.user.id}, {$pull: {tasks: {_id: req.body.id}}}, {new: true});
+        res.status(200).json(user.tasks);
+    } catch (e) {
+        errorHandler(res, e);
+    }
 }
