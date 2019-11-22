@@ -26,8 +26,8 @@ module.exports.create = async function(req, res) {
 
 module.exports.update = async function(req, res){
     try {
-        // const user = await User.findOneAndUpdate({_id: req.user.id}, {$set: {tasks: {_id: req.body.id}}}, {new: true});
-        // res.status(200).json(user.tasks);
+        const user = await User.findOneAndUpdate({_id: req.user.id, 'tasks._id': req.body.id}, {$set: {'tasks.$.description': req.body.description, 'tasks.$.completed': req.body.completed, 'tasks.$.deadline': req.body.deadline}}, {new: true});
+        res.status(200).json(user.tasks);
     } catch (e) {
         errorHandler(res, e);
     }
