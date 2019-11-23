@@ -31,7 +31,7 @@ module.exports.login = async function(req, res){
       if(!req.body.name || req.body.name.length < 4){
         res.status(409).json({message: "Enter your name."});
       } else if (candidate){
-        res.status(409).json({message: "A user with the same name already exists, use a different name."});
+        res.status(409).json({message: "Name is already taken."});
       } else if (!req.body.password || req.body.password.length < 6){
         res.status(409).json({message: "Enter your password more 6 symbols."});
       } else if (req.body.password !== req.body.repeatPassword){
@@ -44,7 +44,7 @@ module.exports.login = async function(req, res){
           tasks: []
         });
         await user.save();
-        res.status(201).json({user});
+        res.status(201).json({message: "Registered."});
       }
     } catch (e) {
       console.error(e);

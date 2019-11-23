@@ -1,9 +1,7 @@
 const path  = require('path');
 const express  = require('express');
-//const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const User = require('./models/Users.js');
 const config = require('./config/config.js');
 const authRoutes = require('./routes/auth.js');
 const tasksRouters = require('./routes/tasks.js');
@@ -49,26 +47,6 @@ function start(){
 }
 
 start();
-
-app.post('/createTask', (req, res) => res.send(createTask(req)));
-
-async function createTask(req) {
-  const task = {
-    description: 'qqqq',
-    completed: true,
-    deadline: "2020-09-15T10:30",
-  }
-
-  try {
-    User.findOneAndUpdate({_id: '5dc434fa328e265418558001'}, {$push: {tasks: task}}, (err, user) => {
-      if(err) return console.log(err);
-      return user;
-    });
-  } catch (e) {
-    console.error(e);
-    return e;
-  }
-}
 
 // send index.html
 app.get('/', (req, res) => {

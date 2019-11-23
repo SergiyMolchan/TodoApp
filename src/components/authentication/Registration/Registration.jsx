@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card';
 const useStyles = makeStyles(theme => ({
   wrapper: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   button: {
     margin: theme.spacing(1),
@@ -35,23 +35,30 @@ export default function OutlinedTextFields() {
   const [name, setName] = React.useState( '' );
   const [password, setPassword] = React.useState( '' );
   const [repeatPassword, setRepeatPassword] = React.useState( '' );
+  const [error, errorHandler] = React.useState('');
+  const [registered, regHandler] = React.useState('');
 
   async function SubmitForm(){
-    const url = 'http://localhost:4000/api/auth/registration';
+    const url = '/api/auth/registration';
     const data = {name: name, password: password, repeatPassword: repeatPassword};
-    console.log(JSON.stringify(data));
     try {
-      const response = await fetch(url, {
+      const res = await fetch(url, {
         method: 'POST',
         cors: 'no-cors',
-        body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify(data)
       });
-      console.log(JSON.stringify(data));
-      const json = await response.json();
-      console.log('Успех:', JSON.stringify(json));
+      const json = await res.json();
+
+      if(res.status === 409){
+        errorHandler(json.message);
+      }
+      if(res.status === 201){
+        regHandler(json.message);
+      }
+
     } catch (error) {
       console.error(error);
     }
@@ -63,8 +70,8 @@ export default function OutlinedTextFields() {
         <form className={classes.container} noValidate autoComplete="off">
 
         <TextField
-            //error
-            //helperText="Incorrect entry."
+            error={error === 'Enter your name.' || error === 'Name is already taken.' ? true : false}
+            helperText={error === 'Enter your name.' || error === 'Name is already taken.' ? error : false}
             onChange={ e => setName(e.target.value)}
             required
             id="outlined-login-SindIn"
@@ -77,6 +84,8 @@ export default function OutlinedTextFields() {
           />  
 
           <TextField
+            error={error === 'Enter your password more 6 symbols.' ? true : false}
+            helperText={error === 'Enter your password more 6 symbols.' ? error : false}
             onChange={ e => setPassword(e.target.value)}
             required
             id="outlined-password-1"
@@ -89,6 +98,8 @@ export default function OutlinedTextFields() {
           />
 
           <TextField
+            error={error === 'Passwords must be identical.' ? true : false}
+            helperText={error === 'Passwords must be identical.' ? error : false}
             required
             onChange={ e => setRepeatPassword(e.target.value)}
             id="outlined-password-2"
@@ -100,10 +111,9 @@ export default function OutlinedTextFields() {
             variant="outlined"
           />
 
-          <Button onClick={()=> SubmitForm()} variant="contained" color="primary" className={classes.button}>
-            Register
+          <Button onClick={()=> SubmitForm()} disabled={registered === 'Registered.' ? true : false} variant="contained" color="primary" className={classes.button}>
+          {registered === 'Registered.' ? 'Registered' : 'Register'}
           </Button>
-
         </form>
       </Card>
     </div>
