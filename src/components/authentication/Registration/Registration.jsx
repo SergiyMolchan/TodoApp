@@ -74,12 +74,12 @@ export default function OutlinedTextFields() {
             helperText={error === 'Enter your name.' || error === 'Name is already taken.' ? error : false}
             onChange={ e => setName(e.target.value)}
             required
-            id="outlined-login-SindIn"
+            id="outlined-login-Register"
             label="Login"
             className={classes.textField}
             type="text"
             margin="normal"
-            autoComplete="current-login-SindIn"
+            autoComplete="current-login-Register"
             variant="outlined"
           />  
 

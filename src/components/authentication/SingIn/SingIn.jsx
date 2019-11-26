@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
+//import {Link, Redirect} from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -32,9 +33,35 @@ const useStyles = makeStyles(theme => ({
 
 export default function OutlinedTextFields() {
   const classes = useStyles();
-  const [name, setName] = React.useState( '' );
+  const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState( '' );
+  const [error, errorHandler] = React.useState('');
 
+  async function SubmitForm(){
+    const url = '/api/auth/login';
+    const data = {name: name, password: password};
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        cors: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+
+      if(res.status === 401){
+        errorHandler(json.message);
+      }
+      if(res.status === 200){
+        localStorage.setItem('jwt-token', json.token);
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className={classes.wrapper}>
@@ -42,8 +69,6 @@ export default function OutlinedTextFields() {
         <form className={classes.container} noValidate autoComplete="on">
 
           <TextField
-            //error
-            //helperText="Incorrect entry."
             onChange={ e => setName(e.target.value)}
             required
             id="outlined-login-SindIn"
@@ -56,6 +81,8 @@ export default function OutlinedTextFields() {
           />  
 
           <TextField
+            error={error === 'Invalid password.' ? true : false}
+            helperText={error === 'Invalid password.' ? error : false}
             required
             onChange={ e => setPassword(e.target.value)}
             id="outlined-password-SindIn"
@@ -66,11 +93,9 @@ export default function OutlinedTextFields() {
             margin="normal"
             variant="outlined"
           />
-          
-          <Button variant="contained" color="primary" className={classes.button}>
+          <Button onClick={ () => SubmitForm()} variant="contained" color="primary" className={classes.button}>
             Login
           </Button>
-
         </form>
       </Card>
     </div>

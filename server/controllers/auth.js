@@ -3,13 +3,13 @@ const config = require('../config/config.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const errorHandler = require('../utils/errorHandler.js');
+
 module.exports.login = async function(req, res){
     const candidate = await User.findOne({name: req.body.name});
 
     if (candidate) {
       const passwordResult = bcrypt.compareSync(req.body.password, candidate.password);
       if (passwordResult) {
-        //LOGIN
         const token = jwt.sign({
           name: candidate.name,
           id: candidate._id
