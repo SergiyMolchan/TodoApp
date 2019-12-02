@@ -10,7 +10,7 @@ ReactDOM.render(
  <BrowserRouter>
     <Switch>
         <Route path='/Auth' component={Auth}/>
-        {localStorage.getItem('jwt-token') ? <Route path='/' component={App} /> : <Redirect to='/Auth'/>}
+        {localStorage.getItem('jwt-token') ? <Route exact path='/' component={App} /> : <Redirect to='/Auth'/>}  
     </Switch>
 </BrowserRouter>, document.getElementById('root'));
 

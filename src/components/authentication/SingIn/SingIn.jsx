@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-//import {Link, Redirect} from 'react-router-dom';
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -33,6 +33,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function OutlinedTextFields() {
   const classes = useStyles();
+  let history = useHistory();
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState( '' );
   const [error, errorHandler] = React.useState('');
@@ -51,13 +52,14 @@ export default function OutlinedTextFields() {
       });
       const json = await res.json();
 
-      if(res.status === 401){
-        errorHandler(json.message);
-      }
       if(res.status === 200){
         localStorage.setItem('jwt-token', json.token);
+        return true;
       }
-
+      if(res.status === 401){
+        errorHandler(json.message);
+        return false;
+      }
     } catch (error) {
       console.error(error);
     }
@@ -93,7 +95,7 @@ export default function OutlinedTextFields() {
             margin="normal"
             variant="outlined"
           />
-          <Button onClick={ () => SubmitForm()} variant="contained" color="primary" className={classes.button}>
+          <Button onClick={ async () => {if(await SubmitForm()) history.push("/")}} variant="contained" color="primary" className={classes.button}>
             Login
           </Button>
         </form>

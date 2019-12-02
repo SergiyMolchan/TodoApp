@@ -129,7 +129,7 @@ class Todo extends React.Component{
     this.setState({tasks});
   }
 
-  componentWillReceiveProps(tasks){
+  UNSAFE_componentWillReceiveProps(tasks){
     if(tasks !== this.props.tasks) {
       this.filterList(); //update component if completed task at {hideCompleted: true}
     }
