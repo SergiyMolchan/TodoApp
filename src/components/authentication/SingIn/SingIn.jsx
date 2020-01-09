@@ -95,7 +95,7 @@ export default function OutlinedTextFields() {
             margin="normal"
             variant="outlined"
           />
-          <Button onClick={ async () => {if(await SubmitForm()) history.push("/")}} variant="contained" color="primary" className={classes.button}>
+          <Button onClick={ async () => {if(await SubmitForm()){history.push("/")}}} variant="contained" color="primary" className={classes.button}>
             Login
           </Button>
         </form>

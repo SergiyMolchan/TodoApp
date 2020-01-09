@@ -3,8 +3,8 @@ const errorHandler = require('../utils/errorHandler.js');
 
 module.exports.getTasks = async function(req, res){
     try {
-        const Tasks = await User.find({name: req.user.id});
-        res.status(200).json(Tasks);
+        const Tasks = await User.findOne({_id: req.user.id});
+        res.status(200).json(Tasks.tasks);
     } catch (e) {
         errorHandler(res, e);
     }

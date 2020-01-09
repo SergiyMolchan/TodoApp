@@ -23,7 +23,7 @@ class Todo extends React.Component{
       deadline: '',
       tasks: this.props.tasks,
       hideCompleted: false,
-      sort: ''
+      sort: '',
     }
     this.handleAddBtn = this.handleAddBtn.bind(this);
     this.handleInputTask = this.handleInputTask.bind(this);
@@ -83,7 +83,6 @@ class Todo extends React.Component{
         tasks = tasks.sort(dynamicSort("description"));
         this.setState({tasks});
       break;
-
       case "ByDeadline":
         tasks = tasks.sort(dynamicSort("deadline"));
         this.setState({tasks});
@@ -154,7 +153,7 @@ class Todo extends React.Component{
               this.state.tasks.map((task) => {
                   return(
                     <TodoItem
-                      key={task.id} 
+                      key={task._id} 
                       task={task}
                       onStatusChange={this.props.onStatusChange}
                       onDeleteTask={this.props.onDeleteTask}

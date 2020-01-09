@@ -3,45 +3,16 @@ import React from 'react';
 import './App.sass';
 import TodoHeader from './components/TodoHeader/TodoHeader';
 import Todo from './components/Todo/Todo';
-//import { BrowserRouter } from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {tasksGET} from './actions/tasksGET'
 
 class App extends React.Component{
 
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [
-        {
-          id: 0,
-          description: 'Create todo array',
-          completed: true,
-          deadline: "2019-09-15T10:30"
-        },
-        {
-          id: 1,
-          description: 'Join softserve IT Academy',
-          completed: false,
-          deadline: "2019-10-24T11:30"
-        },
-        {
-          id: 2,
-          description: 'Created portfolio',
-          completed: false,
-          deadline: "2017-05-24T12:30"
-        },
-        {
-          id: 3,
-          description: 'To sleep',
-          completed: true,
-          deadline: "2020-05-24T13:30"
-        },
-        {
-          id: 4,
-          description: 'Bearth Day',
-          completed: false,
-          deadline: "2019-09-05T23:30"
-        }
-      ],
+      redirect: false
     }
     this.handleStatusChange = this.handleStatusChange.bind(this);
     this.handleDeleteTask = this.handleDeleteTask.bind(this);
@@ -49,14 +20,18 @@ class App extends React.Component{
     this.handleEditTask = this.handleEditTask.bind(this);
   }
 
-  handeleAddTask(description, deadline){
+  componentDidMount(){
+    this.props.tasksGET();
+  }
+
+  async handeleAddTask(description, deadline){
     let length = 0;
     
     if(this.state.tasks.length !== 0)
     {
       // помилка виникає при сортуванні і додаванні нового завдання,
       // тому що останній елемент не завжди має набільший id.
-      length = Math.max.apply(Math, this.state.tasks.map(function(task) { return task.id; }));
+      length = Math.max.apply(Math, this.state.tasks.map(function(task) { return task._id; }));
       length++;
     }
     else
@@ -64,24 +39,45 @@ class App extends React.Component{
       length = 1;
     }
     let newTask = {
-      id: NaN,
+      _id: NaN,
       description: '',
       completed: false,
       deadline: ''
     };
 
     description = description[0].toUpperCase() + description.substring(1);
-    newTask.id = length;
+    newTask._id = length;
     newTask.description = description;
     newTask.deadline = deadline;
 
-    let tasks = this.state.tasks.concat(newTask);
-    this.setState({tasks: tasks});
+    
+    const url = '/api/tasks/';
+    const data = {description: description, deadline: deadline};
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        cors: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('jwt-token')}`
+        },
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+      
+      if(res.status === 200){
+        let tasks = this.state.tasks.concat(json);
+        this.setState({tasks: tasks});
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
   }
 
     handleStatusChange(id){
     let tasks = this.state.tasks.map( (task) => {
-      if(task.id === id){
+      if(task._id === id){
         task.completed = !task.completed;
       }
       return task;
@@ -90,14 +86,14 @@ class App extends React.Component{
   }
 
   handleDeleteTask (id) {
-    let tasks = this.state.tasks.filter( task => task.id !== id );
+    let tasks = this.state.tasks.filter( task => task._id !== id );
     this.setState({tasks});
   }
 
   handleEditTask(id, description, deadline){
     description = description[0].toUpperCase() + description.substring(1);
     let tasks = this.state.tasks.map(task => {
-      if(id === task.id){
+      if(id === task._id){
         task.description = description;
         task.deadline = deadline;
       }
@@ -109,21 +105,29 @@ class App extends React.Component{
   }
 
   render(){
-    return(
-    <div className="wrepper">
+    if(!this.state.redirect){
+
+      return(
+        <div className="wrepper">
       <header>
         <TodoHeader
           tasks={this.state.tasks}
-        />
+          />
       </header>
       <main>
-        <Todo 
-          tasks={this.state.tasks}
-          onAddTask={this.handeleAddTask}
-          onStatusChange={this.handleStatusChange}
-          onDeleteTask={this.handleDeleteTask}
-          onEdit={this.handleEditTask}
-        />
+        {
+          this.props.tasks.length !== 0 ? (     
+            <Todo 
+              tasks={this.props.tasks}
+              onAddTask={this.handeleAddTask}
+              onStatusChange={this.handleStatusChange}
+              onDeleteTask={this.handleDeleteTask}
+              onEdit={this.handleEditTask}
+            />
+          ) : (
+            <p>download</p>
+          )
+        }
       </main>
       <footer>
         <h1>footer</h1>
@@ -131,6 +135,26 @@ class App extends React.Component{
     </div>
     );
   }
+  else
+  {
+    return(
+      <Redirect to='/Auth'/>
+    )
+  }
+  }
 }
 
-export default App;
+function mapStateToProps(state){
+  return {
+    tasks: state.tasksCRUD.tasks,
+    loading: state.tasksCRUD.loading
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return{
+    tasksGET: () => dispatch(tasksGET()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
