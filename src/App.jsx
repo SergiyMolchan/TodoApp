@@ -6,6 +6,7 @@ import Todo from './components/Todo/Todo';
 import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {tasksGET} from './actions/tasksGET'
+import {tasksCREATE} from './actions/tasksCREATE';
 
 class App extends React.Component{
 
@@ -16,64 +17,12 @@ class App extends React.Component{
     }
     this.handleStatusChange = this.handleStatusChange.bind(this);
     this.handleDeleteTask = this.handleDeleteTask.bind(this);
-    this.handeleAddTask = this.handeleAddTask.bind(this);
     this.handleEditTask = this.handleEditTask.bind(this);
   }
 
-  componentDidMount(){
-    this.props.tasksGET();
-  }
-
-  async handeleAddTask(description, deadline){
-    let length = 0;
-    
-    if(this.state.tasks.length !== 0)
-    {
-      // помилка виникає при сортуванні і додаванні нового завдання,
-      // тому що останній елемент не завжди має набільший id.
-      length = Math.max.apply(Math, this.state.tasks.map(function(task) { return task._id; }));
-      length++;
+    componentDidMount(){
+      this.props.tasksGET();
     }
-    else
-    {
-      length = 1;
-    }
-    let newTask = {
-      _id: NaN,
-      description: '',
-      completed: false,
-      deadline: ''
-    };
-
-    description = description[0].toUpperCase() + description.substring(1);
-    newTask._id = length;
-    newTask.description = description;
-    newTask.deadline = deadline;
-
-    
-    const url = '/api/tasks/';
-    const data = {description: description, deadline: deadline};
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        cors: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${localStorage.getItem('jwt-token')}`
-        },
-        body: JSON.stringify(data)
-      });
-      const json = await res.json();
-      
-      if(res.status === 200){
-        let tasks = this.state.tasks.concat(json);
-        this.setState({tasks: tasks});
-      }
-
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
     handleStatusChange(id){
     let tasks = this.state.tasks.map( (task) => {
@@ -116,10 +65,10 @@ class App extends React.Component{
       </header>
       <main>
         {
-          this.props.tasks.length !== 0 ? (     
+          this.props.loading === false ? (     
             <Todo 
               tasks={this.props.tasks}
-              onAddTask={this.handeleAddTask}
+              onAddTask={this.props.tasksCREATE}
               onStatusChange={this.handleStatusChange}
               onDeleteTask={this.handleDeleteTask}
               onEdit={this.handleEditTask}
@@ -154,6 +103,7 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
   return{
     tasksGET: () => dispatch(tasksGET()),
+    tasksCREATE: (description, deadline) => dispatch(tasksCREATE(description, deadline))
   }
 }
 

@@ -1,4 +1,4 @@
-import {CREATE, GET, UPDATE, DELETE, TASKS_GET_START, TASKS_GET_SUCCESS, TASKS_GET_ERROR} from '../actions/actionsTypes';
+import {TASKS_GET_START, TASKS_GET_SUCCESS, TASKS_GET_ERROR, TASKS_CREATE_START, TASKS_CREATE_SUCCESS, TASKS_CREATE_ERROR} from '../actions/actionsTypes';
 
 const initialState = {
     tasks: [
@@ -28,7 +28,18 @@ export default function tasksCRUD(state = initialState, action){
             return{
                 ...state, loading: false, error: action.error
             }
-
+        case TASKS_CREATE_START:
+            return{
+                ...state, loading: true
+            }    
+        case TASKS_CREATE_SUCCESS:
+            return{
+                ...state, loading: false, tasks: action.tasks
+            } 
+        case TASKS_CREATE_ERROR:
+            return{
+                ...state, loading: false, error: action.error
+            }
         default:
             return state
     }

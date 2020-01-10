@@ -1,7 +1,6 @@
-import {GET, TASKS_GET_START, TASKS_GET_SUCCESS, TASKS_GET_ERROR} from './actionsTypes';
+import {TASKS_GET_START, TASKS_GET_SUCCESS, TASKS_GET_ERROR} from './actionsTypes';
 
 export function tasksGET(){
-    console.log('sfdfs');
     return async dispatch => {
         dispatch(tasksGET_Start());
         const url = '/api/tasks/';
