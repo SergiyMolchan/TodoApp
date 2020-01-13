@@ -15,7 +15,6 @@ export function tasksGET(){
             });
             const tasks = await res.json();
             if(res.status === 200){
-                console.log(tasks);
                 dispatch(tasksGET_Success(tasks));
             }
         } catch (error) {

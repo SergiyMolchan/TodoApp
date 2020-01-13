@@ -1,5 +1,6 @@
 import React from 'react';
 //import logo from './logo.svg';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import './App.sass';
 import TodoHeader from './components/TodoHeader/TodoHeader';
 import Todo from './components/Todo/Todo';
@@ -7,6 +8,7 @@ import {Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {tasksGET} from './actions/tasksGET'
 import {tasksCREATE} from './actions/tasksCREATE';
+import {tasksUPDATE} from './actions/tasksUPDATE';
 
 class App extends React.Component{
 
@@ -71,10 +73,10 @@ class App extends React.Component{
               onAddTask={this.props.tasksCREATE}
               onStatusChange={this.handleStatusChange}
               onDeleteTask={this.handleDeleteTask}
-              onEdit={this.handleEditTask}
+              onEdit={this.props.tasksUPDATE}
             />
           ) : (
-            <p>download</p>
+            <LinearProgress variant="query" />
           )
         }
       </main>
@@ -103,7 +105,8 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
   return{
     tasksGET: () => dispatch(tasksGET()),
-    tasksCREATE: (description, deadline) => dispatch(tasksCREATE(description, deadline))
+    tasksCREATE: (description, deadline) => dispatch(tasksCREATE(description, deadline)),
+    tasksUPDATE: (id, description, completed, deadline) => dispatch(tasksUPDATE(id, description, completed, deadline))
   }
 }
 

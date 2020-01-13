@@ -13,6 +13,7 @@ class TodoItem extends React.Component{
     this.state = {
       description: this.props.task.description,
       deadline: this.props.task.deadline,
+      completed: this.props.task.completed,
       editing: false
     }
     this.handleSaveBtn = this.handleSaveBtn.bind(this);
@@ -31,9 +32,10 @@ class TodoItem extends React.Component{
   handleSaveBtn(e){
     e.preventDefault();
     let description = this.state.description;
+    let completed = this.state.completed;
     let deadline = this.state.deadline;
 
-    this.props.onEdit(this.props.task.id, description, deadline);
+    this.props.onEdit(this.props.task._id, description, completed, deadline);
 
     if(!this.state.description){
       return

@@ -1,16 +1,16 @@
-import {TASKS_CREATE_START, TASKS_CREATE_SUCCESS, TASKS_CREATE_ERROR} from './actionsTypes';
+import {TASKS_UPDATE_START, TASKS_UPDATE_SUCCESS, TASKS_UPDATE_ERROR} from './actionsTypes'
 
-export function tasksCREATE(description, deadline){
+export function tasksUPDATE(id, description, completed, deadline){
     return async (dispatch) => {
-        dispatch(tasksCREATE_Start());
-        
+        dispatch(tasksUPDATE_Start());
+
         description = description[0].toUpperCase() + description.substring(1);
-        
+
         const url = '/api/tasks/';
-        const data = {description: description, deadline: deadline};
+        const data = {id: id, description: description, completed: completed, deadline: deadline};
         try {
             const res = await fetch(url, {
-                method: 'POST',
+                method: 'PUT',
                 cors: 'no-cors',
                 headers: {
                 'Content-Type': 'application/json',
@@ -21,31 +21,31 @@ export function tasksCREATE(description, deadline){
             const tasks = await res.json();
             
             if(res.status === 200){
-                dispatch(tasksCREATE_Success(tasks));
+                dispatch(tasksUPDATE_Success(tasks));
             }
 
         } catch (error) {
-        dispatch(tasksCREATE_Error(error));
+        dispatch(tasksUPDATE_Error(error));
         }
     }
 }
 
-export function tasksCREATE_Start(){
+export function tasksUPDATE_Start(){
     return{
-        type: TASKS_CREATE_START
+        type: TASKS_UPDATE_START
     }
 }
 
-export function tasksCREATE_Success(tasks){
+export function tasksUPDATE_Success(tasks){
     return{
-        type: TASKS_CREATE_SUCCESS,
+        type: TASKS_UPDATE_SUCCESS,
         tasks
     }
 }
 
-export function tasksCREATE_Error(error){
+export function tasksUPDATE_Error(error){
     return{
-        type: TASKS_CREATE_ERROR,
+        type: TASKS_UPDATE_ERROR,
         error
     }  
 }
