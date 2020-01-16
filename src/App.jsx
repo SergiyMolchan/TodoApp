@@ -9,6 +9,7 @@ import {connect} from 'react-redux';
 import {tasksGET} from './actions/tasksGET'
 import {tasksCREATE} from './actions/tasksCREATE';
 import {tasksUPDATE} from './actions/tasksUPDATE';
+import {tasksDELETE} from './actions/tasksDELETE';
 
 class App extends React.Component{
 
@@ -18,8 +19,6 @@ class App extends React.Component{
       redirect: false
     }
     this.handleStatusChange = this.handleStatusChange.bind(this);
-    this.handleDeleteTask = this.handleDeleteTask.bind(this);
-    this.handleEditTask = this.handleEditTask.bind(this);
   }
 
     componentDidMount(){
@@ -27,32 +26,14 @@ class App extends React.Component{
     }
 
     handleStatusChange(id){
-    let tasks = this.state.tasks.map( (task) => {
+    this.props.tasks.map( (task) => {
       if(task._id === id){
-        task.completed = !task.completed;
+        this.props.tasksUPDATE(id, task.description, !task.completed, task.deadline);
       }
       return task;
     })
+    let tasks = this.props.tasks;
     this.setState({tasks});
-  }
-
-  handleDeleteTask (id) {
-    let tasks = this.state.tasks.filter( task => task._id !== id );
-    this.setState({tasks});
-  }
-
-  handleEditTask(id, description, deadline){
-    description = description[0].toUpperCase() + description.substring(1);
-    let tasks = this.state.tasks.map(task => {
-      if(id === task._id){
-        task.description = description;
-        task.deadline = deadline;
-      }
-
-      return task;
-    });
-
-    this.setState({ tasks });
   }
 
   render(){
@@ -72,7 +53,7 @@ class App extends React.Component{
               tasks={this.props.tasks}
               onAddTask={this.props.tasksCREATE}
               onStatusChange={this.handleStatusChange}
-              onDeleteTask={this.handleDeleteTask}
+              onDeleteTask={this.props.tasksDELETE}
               onEdit={this.props.tasksUPDATE}
             />
           ) : (
@@ -106,7 +87,8 @@ function mapDispatchToProps(dispatch){
   return{
     tasksGET: () => dispatch(tasksGET()),
     tasksCREATE: (description, deadline) => dispatch(tasksCREATE(description, deadline)),
-    tasksUPDATE: (id, description, completed, deadline) => dispatch(tasksUPDATE(id, description, completed, deadline))
+    tasksUPDATE: (id, description, completed, deadline) => dispatch(tasksUPDATE(id, description, completed, deadline)),
+    tasksDELETE: (id) => dispatch(tasksDELETE(id))
   }
 }
 

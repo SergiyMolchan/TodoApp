@@ -1,4 +1,4 @@
-import {TASKS_GET_START, TASKS_GET_SUCCESS, TASKS_GET_ERROR, TASKS_CREATE_START, TASKS_CREATE_SUCCESS, TASKS_CREATE_ERROR, TASKS_UPDATE_START, TASKS_UPDATE_SUCCESS, TASKS_UPDATE_ERROR} from '../actions/actionsTypes';
+import {TASKS_GET_START, TASKS_GET_SUCCESS, TASKS_GET_ERROR, TASKS_CREATE_START, TASKS_CREATE_SUCCESS, TASKS_CREATE_ERROR, TASKS_UPDATE_START, TASKS_UPDATE_SUCCESS, TASKS_UPDATE_ERROR, TASKS_DELETE_START, TASKS_DELETE_SUCCESS, TASKS_DELETE_ERROR} from '../actions/actionsTypes';
 
 const initialState = {
     tasks: [
@@ -49,6 +49,18 @@ export default function tasksCRUD(state = initialState, action){
                 ...state, loading: false, tasks: action.tasks
             }
         case TASKS_UPDATE_ERROR:
+            return{
+                ...state, loading: false, error: action.error
+            }
+        case TASKS_DELETE_START:
+            return{
+                ...state, loading: true
+            }
+        case TASKS_DELETE_SUCCESS:
+            return{
+                ...state, loading: false, tasks: action.tasks
+            }
+        case TASKS_DELETE_ERROR:
             return{
                 ...state, loading: false, error: action.error
             }

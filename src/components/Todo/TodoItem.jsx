@@ -59,7 +59,7 @@ class TodoItem extends React.Component{
             color="primary"
             checked={task.completed}  
             onChange={ () => {
-            this.props.onStatusChange(task.id)
+            this.props.onStatusChange(task._id)
             }}
           />
           <div className="Todo_Item-description">{task.description}</div>
@@ -67,7 +67,7 @@ class TodoItem extends React.Component{
         <div className="Todo_Item-controller">
           <DeleteBtn
             onDelete={() => {
-              this.props.onDeleteTask(task.id);
+              this.props.onDeleteTask(task._id);
               this.props.onSort();
             }}
             className="Todo_Item-delete"
