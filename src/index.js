@@ -4,7 +4,7 @@ import './index.sass';
 import App from './App';
 import Auth from './components/authentication/Auth';
 import {Provider, connect} from 'react-redux';
-import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
