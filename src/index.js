@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.sass';
 import App from './App';
 import Auth from './components/authentication/Auth';
-import {Provider} from 'react-redux';
+import {Provider, connect} from 'react-redux';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware, compose } from 'redux';
@@ -18,14 +18,26 @@ const composeEnhancers =
 
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 
+function Application(props){
+    return(
+        <BrowserRouter>
+            <Switch>
+                <Route path='/Auth' component={Auth}/>
+                <Route exact path='/' component={App} />
+            </Switch>
+        </BrowserRouter>
+    )
+}
+
+function mapStateToProps(state){
+    return {
+        isAuth: !!state.auth.token
+    }
+}
+connect(mapStateToProps)(Application);
 ReactDOM.render(
 <Provider store={store} >
-    <BrowserRouter>
-        <Switch>
-            <Route path='/Auth' component={Auth}/>
-            {localStorage.getItem('jwt-token') ? <Route exact path='/' component={App} /> : <Redirect to='/Auth'/>}  
-        </Switch>
-    </BrowserRouter>
+    <Application/>
 </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

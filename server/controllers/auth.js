@@ -6,6 +6,7 @@ const errorHandler = require('../utils/errorHandler.js');
 
 module.exports.login = async function(req, res){
     const candidate = await User.findOne({name: req.body.name});
+    const timeLifeOfToken = 60 * 60;
 
     if (candidate) {
       const passwordResult = bcrypt.compareSync(req.body.password, candidate.password);
@@ -13,9 +14,9 @@ module.exports.login = async function(req, res){
         const token = jwt.sign({
           name: candidate.name,
           id: candidate._id
-        }, config.jwt, {expiresIn: 60 * 60});
+        }, config.jwt, {expiresIn: timeLifeOfToken});
   
-        res.status(200).json({token: `Bearer ${token}`});
+        res.status(200).json({token: `Bearer ${token}`, timeLifeOfToken: timeLifeOfToken});
       } else {
         res.status(401).json({message: "Invalid password."});
       }

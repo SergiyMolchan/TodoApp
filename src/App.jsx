@@ -15,14 +15,13 @@ class App extends React.Component{
 
   constructor(props) {
     super(props);
-    this.state = {
-      redirect: false
-    }
     this.handleStatusChange = this.handleStatusChange.bind(this);
   }
 
     componentDidMount(){
-      this.props.tasksGET();
+      if(this.props.isAuth){
+        this.props.tasksGET();
+      }
     }
 
     handleStatusChange(id){
@@ -32,54 +31,45 @@ class App extends React.Component{
       }
       return task;
     })
-    let tasks = this.props.tasks;
-    this.setState({tasks});
   }
 
   render(){
-    if(!this.state.redirect){
-
+    if(this.props.isAuth){
       return(
         <div className="wrepper">
-      <header>
-        <TodoHeader
-          tasks={this.state.tasks}
-          />
-      </header>
-      <main>
-        {
-          this.props.loading === false ? (     
-            <Todo 
+          <header>
+            <TodoHeader
               tasks={this.props.tasks}
-              onAddTask={this.props.tasksCREATE}
-              onStatusChange={this.handleStatusChange}
-              onDeleteTask={this.props.tasksDELETE}
-              onEdit={this.props.tasksUPDATE}
-            />
-          ) : (
-            <LinearProgress variant="query" />
-          )
-        }
-      </main>
-      <footer>
-        <h1>footer</h1>
-      </footer>
-    </div>
-    );
-  }
-  else
-  {
-    return(
-      <Redirect to='/Auth'/>
-    )
-  }
+              />
+          </header>
+          <main>
+            {
+              this.props.loading === false ? (     
+                <Todo 
+                  tasks={this.props.tasks}
+                  onAddTask={this.props.tasksCREATE}
+                  onStatusChange={this.handleStatusChange}
+                  onDeleteTask={this.props.tasksDELETE}
+                  onEdit={this.props.tasksUPDATE}
+                />
+              ) : (
+                <LinearProgress variant="query" />
+              )
+            }
+          </main>
+      </div>
+      );
+    } else {
+      return <Redirect to='/Auth'/>
+    }
   }
 }
 
 function mapStateToProps(state){
   return {
     tasks: state.tasksCRUD.tasks,
-    loading: state.tasksCRUD.loading
+    loading: state.tasksCRUD.loading,
+    isAuth: !!state.auth.token
   }
 }
 

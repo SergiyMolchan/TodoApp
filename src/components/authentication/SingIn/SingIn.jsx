@@ -1,9 +1,12 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { useHistory } from "react-router";
+import {login} from '../../../actions/auth';
+import {Redirect} from 'react-router';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -31,40 +34,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function OutlinedTextFields() {
+function OutlinedTextFields(props) {
   const classes = useStyles();
-  let history = useHistory();
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState( '' );
-  const [error, errorHandler] = React.useState('');
+  const [error, errorHandler] = React.useState(props.error);
 
-  async function SubmitForm(){
-    const url = '/api/auth/login';
-    const data = {name: name, password: password};
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        cors: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-      const json = await res.json();
-
-      if(res.status === 200){
-        localStorage.setItem('jwt-token', json.token);
-        return true;
-      }
-      if(res.status === 401){
-        errorHandler(json.message);
-        return false;
-      }
-    } catch (error) {
-      console.error(error);
-    }
+  function SubmitForm(){
+    props.login(name, password, true);
   }
 
+  if(!props.isAuth){
   return (
     <div className={classes.wrapper}>
       <Card>
@@ -83,8 +63,8 @@ export default function OutlinedTextFields() {
           />  
 
           <TextField
-            error={error === 'Invalid password.' ? true : false}
-            helperText={error === 'Invalid password.' ? error : false}
+            error={props.error === 'Invalid password.' ? true : false}
+            helperText={props.error === 'Invalid password.' ? props.error : false}
             required
             onChange={ e => setPassword(e.target.value)}
             id="outlined-password-SindIn"
@@ -95,11 +75,29 @@ export default function OutlinedTextFields() {
             margin="normal"
             variant="outlined"
           />
-          <Button onClick={ async () => {if(await SubmitForm()){history.push("/")}}} variant="contained" color="primary" className={classes.button}>
+          <Button onClick={() => SubmitForm()} variant="contained" color="primary" className={classes.button}>
             Login
           </Button>
         </form>
       </Card>
     </div>
   );
+  } else {
+    return <Redirect to='/'/>
+  }
 }
+
+function mapStateToProps(state){
+  return {
+    isAuth: !!state.auth.token,
+    error: state.auth.error
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return{
+    login: (name, password) => dispatch(login(name, password)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(OutlinedTextFields);

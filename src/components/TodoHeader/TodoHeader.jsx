@@ -1,10 +1,12 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
+import {logout} from '../../actions/auth'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,13 +20,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ButtonAppBar() {
+function ButtonAppBar(props) {
   const classes = useStyles();
   
-  function LogOut(){
-    localStorage.removeItem("jwt-token");
-  }
-
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -32,9 +30,24 @@ export default function ButtonAppBar() {
           <Typography variant="h6" className={classes.title}>
             Todo
           </Typography>
-          <Button onClick={() => LogOut()} color="inherit" component={Link} to="/Auth">Log out</Button>
+          <Button onClick={() => props.logout()} color="inherit" component={Link} to="/Auth">Log out</Button>
         </Toolbar>
       </AppBar>
     </div>
   );
 }
+
+function mapStateToProps(state){
+  return {
+    tasks: state.tasksCRUD.tasks,
+    loading: state.tasksCRUD.loading
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return{
+    logout: () => dispatch(logout())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonAppBar);
