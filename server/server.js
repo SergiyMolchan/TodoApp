@@ -12,7 +12,7 @@ require('./middleware/passport.js')(passport);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', tasksRouters);
-app.use(express.static(path.join(__dirname, '..', '/public'))); //path statics
+app.use(express.static(path.join(__dirname, '..', '/build'))); //path statics
 app.use(express.json());
 app.use(express.urlencoded({extended: false})); 
 
